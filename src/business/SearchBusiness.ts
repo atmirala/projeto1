@@ -20,9 +20,11 @@ export class SearchBusiness {
       console.error(error);
     }
 
-    console.log('*************************************');
+    console.log('************************************* -> a seguir input');
+    console.log(input)
+    console.log('************************************* -> a seguir response?.data');
     console.log(response?.data);
-    console.log('*************************************');
+    console.log('************************************* -> fim');
 
     const v = new Video(response?.data.etag);
     return v;

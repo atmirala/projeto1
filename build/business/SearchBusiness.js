@@ -32,9 +32,11 @@ class SearchBusiness {
             catch (error) {
                 console.error(error);
             }
-            console.log('*************************************');
+            console.log('************************************* -> a seguir input');
+            console.log(input);
+            console.log('************************************* -> a seguir response?.data');
             console.log(response === null || response === void 0 ? void 0 : response.data);
-            console.log('*************************************');
+            console.log('************************************* -> fim');
             const v = new Video_1.Video(response === null || response === void 0 ? void 0 : response.data.etag);
             return v;
         });
