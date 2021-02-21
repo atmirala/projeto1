@@ -1,13 +1,15 @@
 export class Video {
     constructor(
-        private id:string,
+        private id:any,
     ) {}
 
     getId() {
         return this.id;
     }
     
-    setId(id: string) {
+    setId(id: any) {
         this.id = id;
     }
-}
+
+
+};
