@@ -8,30 +8,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SearchController = void 0;
-const SearchBusiness_1 = require("../business/SearchBusiness");
-class SearchController {
-    search(req, res) {
+exports.YouTubeManager = void 0;
+const axios_1 = __importDefault(require("axios"));
+class YouTubeManager {
+    execute() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const search = req.query.q;
-                const timeMon = req.query.t1;
-                const timeThu = req.query.t2;
-                const timeWed = req.query.t3;
-                const timeTue = req.query.t4;
-                const timeFri = req.query.t5;
-                const timeSat = req.query.t6;
-                const timeSun = req.query.t7;
-                const searchBusiness = new SearchBusiness_1.SearchBusiness();
-                const result = yield searchBusiness.execute(search, timeMon, timeThu, timeWed, timeTue, timeFri, timeSat, timeSun);
-                res.status(200).send({ sucess: true, result });
+                const response = yield axios_1.default.get('https://www.googleapis.com/youtube/v3/search', {
+                    params: {
+                        key: process.env.KEY,
+                        part: 'snippet',
+                        q: 'gato'
+                    }
+                });
+                return response.data;
             }
             catch (error) {
-                res.status(400).send({ error });
+                console.error(error);
             }
         });
     }
 }
-exports.SearchController = SearchController;
-;
+exports.YouTubeManager = YouTubeManager;
