@@ -10,7 +10,7 @@ export class SearchBusiness {
     try {
       response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
         params: {
-          key: 'AIzaSyBnG8VpKbAkMY3BhidodntnRs55H0l2gwE',
+          key: process.env.KEY,
           part: 'id',
           q: 'gato'
         }
