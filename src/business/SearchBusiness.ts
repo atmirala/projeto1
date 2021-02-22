@@ -9,11 +9,11 @@ export class SearchBusiness {
   async execute(search: string, timeMon: string, timeThu: string, timeWed: string, timeTue: string, timeFri: string, timeSat: string, timeSun: string): Promise<any> {
     let response;
     try {
-      const result = await new YouTubeManager().execute()
+      const result = await new YouTubeManager().execute(search)
       console.log(result.items[0].id)
     } catch (error) {
       console.error(error);
     }
 
-  }
+  };
 };
