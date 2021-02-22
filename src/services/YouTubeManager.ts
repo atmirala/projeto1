@@ -8,7 +8,8 @@ export class YouTubeManager {
                 key: process.env.KEY,
                 part: 'snippet',
                 q: search, 
-                maxResults: 50
+                maxResults: 50,
+                type: 'video'
               }
 
             });

@@ -10,7 +10,14 @@ export class SearchBusiness {
     let response;
     try {
       const result = await new YouTubeManager().execute(search)
-      console.log(result.items[0].id)
+      /*console.log(result.items[0].id)*/
+      console.log("nextPageToken = "+result?.nextPageToken);
+      let i;
+      for(i = 0; i < result.items.length; i++){
+        console.log('*** result.items[' + i + ']:');
+        console.log(result.items[i]);
+      }
+      console.log(result)
     } catch (error) {
       console.error(error);
     }

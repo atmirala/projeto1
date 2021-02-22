@@ -17,16 +17,22 @@ class SearchBusiness {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const result = yield new YouTubeManager_1.YouTubeManager().execute();
-                console.log(result.items[0].id);
+                const result = yield new YouTubeManager_1.YouTubeManager().execute(search);
+                /*console.log(result.items[0].id)*/
+                console.log("nextPageToken = " + (result === null || result === void 0 ? void 0 : result.nextPageToken));
+                let i;
+                for (i = 0; i < result.items.length; i++) {
+                    console.log('*** result.items[' + i + ']:');
+                    console.log(result.items[i]);
+                }
+                console.log(result);
             }
             catch (error) {
                 console.error(error);
             }
-            /*const v = new Video(response?.data.etag);
-            return v;*/
         });
     }
+    ;
 }
 exports.SearchBusiness = SearchBusiness;
 ;

@@ -15,14 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.YouTubeManager = void 0;
 const axios_1 = __importDefault(require("axios"));
 class YouTubeManager {
-    execute() {
+    execute(search) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const response = yield axios_1.default.get('https://www.googleapis.com/youtube/v3/search', {
                     params: {
                         key: process.env.KEY,
                         part: 'snippet',
-                        q: 'gato'
+                        q: search,
+                        maxResults: 50,
+                        type: 'video'
                     }
                 });
                 return response.data;
