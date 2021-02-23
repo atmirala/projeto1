@@ -10,21 +10,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SearchBusiness = void 0;
-const YouTubeManager_1 = require("../services/YouTubeManager");
+//import { Video } from "../model/Video";
+const YouTubeManager2_1 = require("../services/YouTubeManager2");
 class SearchBusiness {
     constructor() { }
     execute(search, timeMon, timeThu, timeWed, timeTue, timeFri, timeSat, timeSun) {
         return __awaiter(this, void 0, void 0, function* () {
             let response;
             try {
-                const result = yield new YouTubeManager_1.YouTubeManager().execute(search);
+                const result = yield new YouTubeManager2_1.YouTubeManager2().execute(search);
                 /*console.log(result.items[0].id)*/
-                console.log("nextPageToken = " + (result === null || result === void 0 ? void 0 : result.nextPageToken));
-                let i;
-                for (i = 0; i < result.items.length; i++) {
-                    console.log('*** result.items[' + i + ']:');
-                    console.log(result.items[i]);
-                }
+                //console.log("nextPageToken = "+result.nextPageToken);
+                //let i;
+                //for(i = 0; i < result.items.length; i++){
+                //  console.log('*** result.items[' + i + ']:');
+                //  console.log(result.items[i]);
+                //}
                 console.log(result);
             }
             catch (error) {

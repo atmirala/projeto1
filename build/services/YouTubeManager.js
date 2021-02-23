@@ -18,10 +18,10 @@ class YouTubeManager {
     execute(search) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = yield axios_1.default.get('https://www.googleapis.com/youtube/v3/search', {
+                const response = yield axios_1.default.get('https://www.googleapis.com/youtube/v3/videos', {
                     params: {
                         key: process.env.KEY,
-                        part: 'snippet',
+                        part: 'id,snippet,contentDetails',
                         q: search,
                         maxResults: 50,
                         type: 'video'
