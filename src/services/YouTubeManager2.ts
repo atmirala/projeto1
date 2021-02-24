@@ -18,7 +18,7 @@ export class YouTubeManager2 {
                         key: process.env.KEY,
                         part: 'id',
                         q: search,
-                        maxResults: 10,
+                        maxResults: 200,
                         type: 'video',
                         pageToken: 'tokenPagina'
                     }
@@ -27,7 +27,7 @@ export class YouTubeManager2 {
                         key: process.env.KEY,
                         part: 'id',
                         q: search,
-                        maxResults: 10,
+                        maxResults: 200,
                         type: 'video',  
                     }    
                 }
@@ -66,7 +66,7 @@ export class YouTubeManager2 {
                         duracao: duration
                     });
                     collectedResults++;
-                    if((collectedResults > 10) || (collectedResults == totalResultNumber)){
+                    if((collectedResults > 200) || (collectedResults == totalResultNumber)){
                         closedSearch = true;
                         break;
                     }
