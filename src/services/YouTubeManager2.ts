@@ -2,80 +2,84 @@ import axios from "axios";
 
 export class YouTubeManager2 {
     async execute(search:string){
-        let resultadosColetados = 0;
-        let resultados = [];
-        let numeroResultadosTotal;
-        let tokenProximaPagina = '';
-        let buscaEncerrada = false;
+        let collectedResults = 0;
+        let results = [];
+        let totalResultNumber;
+        let nextPageToken = '';
+        let closedSearch = false;
         let i;
-        while(!buscaEncerrada){
-            let idsConcatenados = '';
+        let response;
+        while(!closedSearch){
+            let concatenatedIds = '';
             try {
-                let parametros;
-                if(tokenProximaPagina.length > 0){
-                    parametros = {
+                let parameters;
+                if(nextPageToken.length > 0){
+                    parameters = {
                         key: process.env.KEY,
                         part: 'id',
                         q: search,
-                        maxResults: 50,
+                        maxResults: 10,
                         type: 'video',
                         pageToken: 'tokenPagina'
                     }
                 } else {
-                    parametros = {
+                    parameters = {
                         key: process.env.KEY,
                         part: 'id',
                         q: search,
-                        maxResults: 50,
+                        maxResults: 10,
                         type: 'video',  
                     }    
                 }
            
-                const response = await axios.get('https://www.googleapis.com/youtube/v3/search', { params: parametros });
+                response = await axios.get('https://www.googleapis.com/youtube/v3/search', { params: parameters });
                
-                tokenProximaPagina = response.data.nextPageToken;
-                numeroResultadosTotal = response.data.pageInfo.totalResults;
+                nextPageToken = response.data.nextPageToken;
+                totalResultNumber = response.data.pageInfo.totalResults;
                 for(i = 0; i < response.data.items.length; i++){
                     if(i > 0) {
-                        idsConcatenados = idsConcatenados + ',';
+                        concatenatedIds = concatenatedIds + ',';
                     }
-                    idsConcatenados = idsConcatenados + response.data.items[i].id.videoId;
+                    concatenatedIds = concatenatedIds + response.data.items[i].id.videoId;
                 }  
             } catch (error) {
                 console.error(error);
+                closedSearch = true;
             }
             try {
-                const response = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
+                response = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
                     params: {
                         key: process.env.KEY,
                         part: 'snippet,contentDetails',
-                        id: idsConcatenados
+                        id: concatenatedIds
                     }
                 });
                 for(i = 0; i < response.data.items.length; i++){
                     let id = response.data.items[i].id;
-                    let titulo = response.data.items[i].snippet.title;
-                    let descricao = response.data.items[i].snippet.description;
-                    let duracao = response.data.items[i].contentDetails.duration;
-                    resultados.push({
+                    let title = response.data.items[i].snippet.title;
+                    let description = response.data.items[i].snippet.description;
+                    let duration = response.data.items[i].contentDetails.duration;
+                    results.push({
                         id: id,
-                        titulo: titulo,
-                        descricao: descricao,
-                        duracao: duracao
+                        titulo: title,
+                        descricao: description,
+                        duracao: duration
                     });
-                    resultadosColetados++;
-                    if((resultadosColetados == 200) || (resultadosColetados == numeroResultadosTotal)){
-                        buscaEncerrada = true;
+                    collectedResults++;
+                    if((collectedResults > 10) || (collectedResults == totalResultNumber)){
+                        closedSearch = true;
                         break;
                     }
                 }   
             } catch (error) {
                 console.error(error);
+                closedSearch = true;
+                
             }  
         }
         return {
-            numeroResultados: resultadosColetados,
-            resultados: resultados
+            resultsNumber: collectedResults,
+            results: results
         };
     } 
 }

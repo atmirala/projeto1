@@ -17,54 +17,56 @@ const axios_1 = __importDefault(require("axios"));
 class YouTubeManager2 {
     execute(search) {
         return __awaiter(this, void 0, void 0, function* () {
-            let resultadosColetados = 0;
-            let resultados = [];
-            let numeroResultadosTotal;
-            let tokenProximaPagina = '';
-            let buscaEncerrada = false;
+            let collectedResults = 0;
+            let results = [];
+            let totalResultNumber;
+            let nextPageToken = '';
+            let closedSearch = false;
             let i;
-            while (!buscaEncerrada) {
-                let idsConcatenados = '';
+            let response;
+            while (!closedSearch) {
+                let concatenatedIds = '';
                 try {
-                    let parametros;
-                    if (tokenProximaPagina.length > 0) {
-                        parametros = {
+                    let parameters;
+                    if (nextPageToken.length > 0) {
+                        parameters = {
                             key: process.env.KEY,
                             part: 'id',
                             q: search,
-                            maxResults: 50,
+                            maxResults: 10,
                             type: 'video',
                             pageToken: 'tokenPagina'
                         };
                     }
                     else {
-                        parametros = {
+                        parameters = {
                             key: process.env.KEY,
                             part: 'id',
                             q: search,
-                            maxResults: 50,
+                            maxResults: 10,
                             type: 'video',
                         };
                     }
-                    const response = yield axios_1.default.get('https://www.googleapis.com/youtube/v3/search', { params: parametros });
-                    tokenProximaPagina = response.data.nextPageToken;
-                    numeroResultadosTotal = response.data.pageInfo.totalResults;
+                    response = yield axios_1.default.get('https://www.googleapis.com/youtube/v3/search', { params: parameters });
+                    nextPageToken = response.data.nextPageToken;
+                    totalResultNumber = response.data.pageInfo.totalResults;
                     for (i = 0; i < response.data.items.length; i++) {
                         if (i > 0) {
-                            idsConcatenados = idsConcatenados + ',';
+                            concatenatedIds = concatenatedIds + ',';
                         }
-                        idsConcatenados = idsConcatenados + response.data.items[i].id.videoId;
+                        concatenatedIds = concatenatedIds + response.data.items[i].id.videoId;
                     }
                 }
                 catch (error) {
                     console.error(error);
+                    closedSearch = true;
                 }
                 try {
-                    const response = yield axios_1.default.get('https://www.googleapis.com/youtube/v3/videos', {
+                    response = yield axios_1.default.get('https://www.googleapis.com/youtube/v3/videos', {
                         params: {
                             key: process.env.KEY,
                             part: 'snippet,contentDetails',
-                            id: idsConcatenados
+                            id: concatenatedIds
                         }
                     });
                     for (i = 0; i < response.data.items.length; i++) {
@@ -72,26 +74,27 @@ class YouTubeManager2 {
                         let titulo = response.data.items[i].snippet.title;
                         let descricao = response.data.items[i].snippet.description;
                         let duracao = response.data.items[i].contentDetails.duration;
-                        resultados.push({
+                        results.push({
                             id: id,
                             titulo: titulo,
                             descricao: descricao,
                             duracao: duracao
                         });
-                        resultadosColetados++;
-                        if ((resultadosColetados == 200) || (resultadosColetados == numeroResultadosTotal)) {
-                            buscaEncerrada = true;
+                        collectedResults++;
+                        if ((collectedResults > 10) || (collectedResults == totalResultNumber)) {
+                            closedSearch = true;
                             break;
                         }
                     }
                 }
                 catch (error) {
                     console.error(error);
+                    closedSearch = true;
                 }
             }
             return {
-                numeroResultados: resultadosColetados,
-                resultados: resultados
+                numeroResultados: collectedResults,
+                resultados: results
             };
         });
     }
